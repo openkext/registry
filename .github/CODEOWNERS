@@ -1,0 +1,3 @@
+# Everything except the data in kexts/ needs a maintainer's review (see GOVERNANCE.md).
+*            @kevineduardo
+/kexts/

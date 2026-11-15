@@ -1,0 +1,74 @@
+# SPDX-License-Identifier: MIT
+# The registry bot. It runs the rules from the base branch (never the pull request's code),
+# reads the pull request's files as data with `git show`, then comments, labels, and merges
+# what passes. See GOVERNANCE.md.
+name: bot
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+concurrency:
+  group: bot-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  review:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out the base branch (trusted code)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fetch the pull request as data
+        run: git fetch --no-tags origin "+refs/pull/${PR}/head:refs/remotes/pr/head"
+        env:
+          PR: ${{ github.event.pull_request.number }}
+      - name: Apply the rules
+        id: rules
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          python tools/review_pr.py "$PR" "$BASE" "$HEAD" verdict.json > comment.md
+          printf '\n<!-- openkext-bot -->\n' >> comment.md
+          echo "decision=$(python -c 'import json;print(json.load(open("verdict.json"))["decision"])')" >> "$GITHUB_OUTPUT"
+          cat comment.md
+      - name: Comment and label
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          DECISION: ${{ steps.rules.outputs.decision }}
+        run: |
+          gh label create bot:approved --color 2da44e --description "Passed the automatic rules" --force
+          gh label create bot:needs-fix --color d29922 --description "A rule failed; the author can fix it" --force
+          gh label create needs-review --color 8250df --description "Outside the automatic rules; a maintainer decides" --force
+          id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+                 -q '.[] | select(.body | contains("<!-- openkext-bot -->")) | .id' | tail -1)
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -F body=@comment.md >/dev/null
+          else
+            gh pr comment "$PR" --body-file comment.md
+          fi
+          for l in bot:approved bot:needs-fix needs-review; do gh pr edit "$PR" --remove-label "$l" >/dev/null 2>&1 || true; done
+          case "$DECISION" in
+            approve) gh pr edit "$PR" --add-label bot:approved ;;
+            fix)     gh pr edit "$PR" --add-label bot:needs-fix ;;
+            *)       gh pr edit "$PR" --add-label needs-review ;;
+          esac
+      - name: Merge
+        if: steps.rules.outputs.decision == 'approve'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: gh pr merge "$PR" --squash --auto --match-head-commit "$HEAD"

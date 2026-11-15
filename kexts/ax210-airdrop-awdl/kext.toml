@@ -1,0 +1,45 @@
+id = "ax210-airdrop-awdl"
+name = "AirportItlwm with AWDL and AirDrop"
+summary = "Fork of OpenIntelWireless AirportItlwm that adds AWDL and AirDrop for the Intel AX210 on Sequoia and Tahoe, with a BlueToolFixup build for BLE advertising sets."
+kind = "kext"
+categories = ["wifi", "bluetooth"]
+source = "https://github.com/kevineduardo/ax210-airdrop-awdl-hackintosh"
+license = "GPL-2.0-only"
+license_file = "driver/AirportItlwm/LICENSE"
+maintainers = ["kevineduardo"]
+ai_disclosure = "Developed with Claude (Opus 5.5, Fable 5.2); every change tested on hardware by the maintainer."
+based_on = [
+  "https://github.com/OpenIntelWireless/itlwm",
+  "https://github.com/laobamac/itlwm",
+  "https://github.com/crazyhulk/itlwm",
+  "https://github.com/acidanthera/BrcmPatchRAM",
+]
+
+[[hardware]]
+vendor = "intel"
+description = "Intel Wi-Fi 6E AX210"
+pci_ids = ["8086:2725"]
+
+[macos]
+min = "15.8"
+max = "26.7"
+
+[[releases]]
+version = "1.0.0-beta.2"
+tag = "v1.0.0-beta.2"
+date = 2026-11-15
+notes = "Tahoe 26.7.2 kext tested on hardware; the Sequoia kext of this release is untested."
+
+  [[releases.assets]]
+  name = "AirportItlwm-AWDL-Tahoe-Release.zip"
+  sha256 = "46a891d69f9bd42edb22bda196b90666651b449956e10ccd1de2f428bbb18bdd"
+  macos = "26"
+
+  [[releases.assets]]
+  name = "AirportItlwm-AWDL-Sequoia-Release.zip"
+  sha256 = "d768f866a0157c341fd183b3c1f109e44dde4ef5ce319ee4b4eecda432728480"
+  macos = "15"
+
+  [[releases.assets]]
+  name = "BlueToolFixup-advsets-Release.zip"
+  sha256 = "8e51f43e192fd194b48853c94a368631c24f3eca770157c145347281d7c58aa7"
