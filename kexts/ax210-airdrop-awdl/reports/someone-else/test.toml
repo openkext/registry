@@ -1,0 +1,24 @@
+kext = "ax210-airdrop-awdl"
+version = "1.0.0-beta.2"
+asset = "AirportItlwm-AWDL-Tahoe-Release.zip"
+result = "works"
+date = 2026-11-15
+notes = "AirDrop works both ways. Mac to iPhone over AWDL is slow (about 1 MB/s). Needs OpenCore PowerTimeoutKernelPanic=false on Tahoe."
+
+[macos]
+version = "26.7.2"
+build = "25G332"
+
+[hardware]
+cpu = "AMD Ryzen 5 5600G"
+smbios = "MacPro7,1"
+bootloader = "OpenCore 1.0.8"
+device_ids = ["8086:2725"]
+
+[features]
+wifi = "works"
+airdrop-receive = "works"
+airdrop-send = "works"
+ble-advertising = "works"
+sleep-wake = "untested"
+handoff = "untested"
