@@ -303,3 +303,24 @@ class Registry(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Schemas(unittest.TestCase):
+    def test_committed_schemas_match_model(self):
+        import subprocess
+        r = subprocess.run([sys.executable, os.path.join(ROOT, "tools", "make_schemas.py"), "--check"],
+                           capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+
+    def test_make_report_output_is_valid(self):
+        sys.path.insert(0, os.path.join(ROOT, "tools"))
+        import make_report  # noqa: E402
+
+        class A:
+            kext, version, result, asset, notes = "demo-wifi", "1.0.0", "works", None, 'say "hi"\nok'
+            bootloader, device, feature = "OpenCore 1.0.8", ["8086:2725"], ["wifi=works"]
+        text_ = make_report.render(A, "26.7.2", "25G332", "Intel i5", "iMac19,1")
+        d, err = model.parse_toml(text_.encode())
+        self.assertIsNone(err)
+        self.assertEqual(model.check_report(d, model.parse_toml(ENTRY.encode())[0]), [])
+        self.assertEqual(d["notes"], 'say "hi"\nok')

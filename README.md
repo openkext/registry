@@ -29,7 +29,11 @@ Run the checks locally with `python3 tools/check_registry.py` (Python 3.11+, no 
 
 ## Report a test
 
-Add `kexts/<id>/reports/<your-login>/<anything>.toml` following [docs/report-format.md](docs/report-format.md) and open a pull request. One report per pull request. Your newest report for a release is the one that counts; to change your result, add a new file instead of editing the old one.
+Run `python3 tools/make_report.py <id> <version> works|partial|broken --login <you> --write` on the tested Mac, or write `kexts/<id>/reports/<your-login>/<anything>.toml` by hand following [docs/report-format.md](docs/report-format.md) and open a pull request. One report per pull request. Your newest report for a release is the one that counts; to change your result, add a new file instead of editing the old one.
+
+## For tools and AI agents
+
+JSON Schemas for both file formats are in [`schema/`](schema/), `tools/make_report.py` writes a report from the Mac it runs on, and [AGENTS.md](AGENTS.md) explains how an AI agent should work with this repository. The site publishes the catalog as JSON (`catalog.json`, `api/`) and an index for LLMs (`llms.txt`).
 
 ## License
 

@@ -1,0 +1,243 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openkext.github.io/schema/kext.schema.json",
+  "title": "OpenKext project entry (kexts/<id>/kext.toml)",
+  "description": "Schema of a registry entry, expressed as JSON. The files are TOML; openkext_registry/model.py is the authoritative check.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "summary",
+    "kind",
+    "categories",
+    "source",
+    "license",
+    "maintainers",
+    "ai_disclosure",
+    "macos",
+    "releases"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{1,48}[a-z0-9]$",
+      "maxLength": 50,
+      "description": "Lowercase id; equals the directory name"
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 280
+    },
+    "kind": {
+      "enum": [
+        "docs",
+        "kext",
+        "patch",
+        "tool"
+      ]
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "audio",
+          "bluetooth",
+          "cpu",
+          "ethernet",
+          "firmware",
+          "graphics",
+          "input",
+          "other",
+          "power",
+          "sensors",
+          "storage",
+          "usb",
+          "wifi"
+        ]
+      },
+      "uniqueItems": true,
+      "minItems": 1,
+      "maxItems": 5
+    },
+    "source": {
+      "type": "string",
+      "pattern": "^https://github\\.com/([A-Za-z0-9-]+)/([A-Za-z0-9._-]+)$",
+      "maxLength": 150,
+      "description": "Public GitHub repository URL"
+    },
+    "license": {
+      "enum": [
+        "APSL-2.0",
+        "Apache-2.0",
+        "BSD-2-Clause",
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-2.0-or-later",
+        "GPL-3.0-only",
+        "GPL-3.0-or-later",
+        "ISC",
+        "LGPL-2.1-only",
+        "LGPL-2.1-or-later",
+        "MIT",
+        "MPL-2.0"
+      ],
+      "description": "SPDX id. Other open-source licenses are possible but go to manual review."
+    },
+    "license_file": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Path of the license text in the repository"
+    },
+    "maintainers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$"
+      },
+      "uniqueItems": true,
+      "minItems": 1,
+      "maxItems": 10
+    },
+    "ai_disclosure": {
+      "type": "string",
+      "maxLength": 280,
+      "description": "AI tools and models used, or 'none'"
+    },
+    "homepage": {
+      "type": "string",
+      "pattern": "^https://",
+      "maxLength": 200
+    },
+    "based_on": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^https://"
+      },
+      "uniqueItems": true,
+      "maxItems": 20
+    },
+    "hardware": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "vendor",
+          "description"
+        ],
+        "properties": {
+          "vendor": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "pci_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{4}:[0-9a-f]{4}$"
+            },
+            "uniqueItems": true,
+            "maxItems": 64
+          },
+          "usb_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{4}:[0-9a-f]{4}$"
+            },
+            "uniqueItems": true,
+            "maxItems": 64
+          }
+        }
+      }
+    },
+    "macos": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "min",
+        "max"
+      ],
+      "properties": {
+        "min": {
+          "type": "string",
+          "pattern": "^(1[0-9]|2[0-9])(\\.[0-9]{1,2}){1,2}$"
+        },
+        "max": {
+          "type": "string",
+          "pattern": "^(1[0-9]|2[0-9])(\\.[0-9]{1,2}){1,2}$"
+        }
+      }
+    },
+    "releases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "tag",
+          "date",
+          "assets"
+        ],
+        "properties": {
+          "version": {
+            "type": "string",
+            "pattern": "^[0-9A-Za-z][0-9A-Za-z.+_-]{0,40}$",
+            "maxLength": 41
+          },
+          "tag": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "TOML date (YYYY-MM-DD); JSON copies use the ISO string"
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "assets": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "sha256"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "macos": {
+                  "type": "string",
+                  "maxLength": 20
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
