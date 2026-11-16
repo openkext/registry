@@ -2,7 +2,7 @@
 
 The catalog of open-source macOS drivers (kexts), patches and porting tools for hackintosh hardware. Each entry points to the project's own repository and releases; nothing is hosted here except metadata and test reports.
 
-The site at [openkext.github.io](https://openkext.github.io) is built from this repository.
+The site at [openkext.github.io](https://openkext.org) is built from this repository.
 
 ## How it works
 

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://openkext.github.io/schema/kext.schema.json",
+  "$id": "https://openkext.org/schema/kext.schema.json",
   "title": "OpenKext project entry (kexts/<id>/kext.toml)",
   "description": "Schema of a registry entry, expressed as JSON. The files are TOML; openkext_registry/model.py is the authoritative check.",
   "type": "object",

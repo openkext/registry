@@ -10,12 +10,12 @@ A catalog of open-source macOS drivers (kexts), patches and porting tools for no
 
 | What | Where |
 |---|---|
-| Schema of an entry (JSON Schema, describes the TOML) | [`schema/kext.schema.json`](schema/kext.schema.json), also at https://openkext.github.io/schema/kext.schema.json |
+| Schema of an entry (JSON Schema, describes the TOML) | [`schema/kext.schema.json`](schema/kext.schema.json), also at https://openkext.org/schema/kext.schema.json |
 | Schema of a report | [`schema/report.schema.json`](schema/report.schema.json) |
-| The whole catalog, with computed status | https://openkext.github.io/catalog.json |
-| One project | https://openkext.github.io/api/kexts/<id>.json |
-| Which project drives a PCI or USB id | https://openkext.github.io/api/hardware.json |
-| Site index for LLMs | https://openkext.github.io/llms.txt and https://openkext.github.io/llms-full.txt |
+| The whole catalog, with computed status | https://openkext.org/catalog.json |
+| One project | https://openkext.org/api/kexts/<id>.json |
+| Which project drives a PCI or USB id | https://openkext.org/api/hardware.json |
+| Site index for LLMs | https://openkext.org/llms.txt and https://openkext.org/llms-full.txt |
 | Rules, as code | [`openkext_registry/rules.py`](openkext_registry/rules.py) (status: [`status.py`](openkext_registry/status.py)) |
 
 ## Tasks

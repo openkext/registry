@@ -17,7 +17,7 @@ sys.path.insert(0, ROOT)
 from openkext_registry import model as m  # noqa: E402
 
 S = "https://json-schema.org/draft/2020-12/schema"
-BASE = "https://openkext.github.io/schema/"
+BASE = "https://openkext.org/schema/"
 
 
 def s(pat=None, maxlen=None, **k):
