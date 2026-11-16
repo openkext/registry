@@ -19,6 +19,7 @@ based_on = [
 vendor = "intel"
 description = "Intel Wi-Fi 6E AX210"
 pci_ids = ["8086:2725"]
+usb_ids = ["8087:0032"]
 
 [macos]
 min = "15.8"
