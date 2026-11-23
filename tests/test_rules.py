@@ -165,6 +165,21 @@ class NewKext(unittest.TestCase):
         self.assertEqual(run("alice", [(E, "added")], {}, {E: "id = "}).decision, "fix")
 
 
+class BundleIds(unittest.TestCase):
+    def check(self, line):
+        import tomllib
+        d = tomllib.loads(ENTRY.replace('ai_disclosure = "none"', 'ai_disclosure = "none"\n' + line))
+        return model.check_kext(d, "demo-wifi")
+
+    def test_valid(self):
+        self.assertEqual(self.check('bundle_ids = ["com.zxystd.AirportItlwm", "as.acidanthera.BlueToolFixup"]'), [])
+
+    def test_invalid(self):
+        self.assertTrue(self.check('bundle_ids = ["AirportItlwm"]'))
+        self.assertTrue(self.check('bundle_ids = ["com.x/../y"]'))
+        self.assertTrue(self.check('bundle_ids = ["com.a", "com.a"]'))
+
+
 class Scope(unittest.TestCase):
     def test_outside_kexts_needs_review(self):
         v = run("alice", [("openkext_registry/rules.py", "modified")], {}, {})

@@ -15,6 +15,8 @@ maintainers = ["you"]            # GitHub logins
 ai_disclosure = "none"           # or the AI tools and models used, e.g. "Claude Opus 5.5"
 homepage = "https://..."         # optional
 based_on = ["https://github.com/OpenIntelWireless/itlwm"]   # optional: upstream projects
+bundle_ids = ["com.you.DemoWifi"]  # optional: CFBundleIdentifier of each kext you ship, so installers
+                                 # such as the openkext CLI can find an installed copy
 
 [[hardware]]                     # optional, repeatable
 vendor = "intel"

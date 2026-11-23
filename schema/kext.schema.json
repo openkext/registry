@@ -122,6 +122,17 @@
       "uniqueItems": true,
       "maxItems": 20
     },
+    "bundle_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9-]*(\\.[A-Za-z0-9][A-Za-z0-9_-]*)+$",
+        "maxLength": 120
+      },
+      "uniqueItems": true,
+      "maxItems": 20,
+      "description": "CFBundleIdentifier of each kext the project ships; installers use it to find an installed copy"
+    },
     "hardware": {
       "type": "array",
       "items": {

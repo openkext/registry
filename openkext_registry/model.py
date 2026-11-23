@@ -13,6 +13,7 @@ MACOS_RE = re.compile(r"^(1[0-9]|2[0-9])(\.[0-9]{1,2}){1,2}$")
 BUILD_RE = re.compile(r"^[0-9]{2}[A-Z][0-9]{1,4}[a-z]?$")
 GITHUB_REPO_RE = re.compile(r"^https://github\.com/([A-Za-z0-9-]+)/([A-Za-z0-9._-]+)$")
 HW_ID_RE = re.compile(r"^[0-9a-f]{4}:[0-9a-f]{4}$")
+BUNDLE_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9-]*(\.[A-Za-z0-9][A-Za-z0-9_-]*)+$")
 
 KINDS = {"kext", "patch", "tool", "docs"}
 CATEGORIES = {"wifi", "bluetooth", "audio", "graphics", "ethernet", "usb", "storage",
@@ -105,7 +106,8 @@ def _version_key(v):
 
 
 KEXT_KEYS = {"id", "name", "summary", "kind", "categories", "source", "license", "license_file",
-             "maintainers", "ai_disclosure", "homepage", "based_on", "hardware", "macos", "releases"}
+             "maintainers", "ai_disclosure", "homepage", "based_on", "bundle_ids", "hardware", "macos",
+             "releases"}
 
 
 def check_kext(d, dir_id):
@@ -134,6 +136,9 @@ def check_kext(d, dir_id):
     _str(d, "ai_disclosure", errors, maxlen=280)
     _str(d, "homepage", errors, required=False, maxlen=200, pattern=re.compile(r"^https://"))
     _list_of_str(d, "based_on", errors, required=False, pattern=re.compile(r"^https://"), maxitems=20)
+    for b in _list_of_str(d, "bundle_ids", errors, required=False, pattern=BUNDLE_ID_RE, maxitems=20):
+        if len(b) > 120:
+            errors.append(f"`bundle_ids` item is longer than 120 characters: {b[:40]!r}...")
 
     hw = d.get("hardware", [])
     if not isinstance(hw, list):

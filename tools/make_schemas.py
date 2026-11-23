@@ -60,6 +60,9 @@ def kext_schema():
             "ai_disclosure": s(maxlen=280, description="AI tools and models used, or 'none'"),
             "homepage": s("^https://", 200),
             "based_on": arr(s("^https://"), maxItems=20),
+            "bundle_ids": arr(s(m.BUNDLE_ID_RE, 120), maxItems=20,
+                              description="CFBundleIdentifier of each kext the project ships; installers use it "
+                                          "to find an installed copy"),
             "hardware": {"type": "array", "items": {
                 "type": "object", "additionalProperties": False, "required": ["vendor", "description"],
                 "properties": {"vendor": s(maxlen=40), "description": s(maxlen=120),

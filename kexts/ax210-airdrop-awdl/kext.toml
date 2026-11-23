@@ -8,6 +8,7 @@ license = "GPL-2.0-only"
 license_file = "driver/AirportItlwm/LICENSE"
 maintainers = ["kevineduardo"]
 ai_disclosure = "Developed with Claude (Opus 5.5, Fable 5.2); every change tested on hardware by the maintainer."
+bundle_ids = ["com.zxystd.AirportItlwm", "as.acidanthera.BlueToolFixup"]
 based_on = [
   "https://github.com/OpenIntelWireless/itlwm",
   "https://github.com/laobamac/itlwm",
